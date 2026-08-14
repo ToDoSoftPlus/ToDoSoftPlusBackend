@@ -1,4 +1,8 @@
-﻿using Infrastructure.DbContext;
+﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.UnitOfWork;
+using Infrastructure.DbContext;
+using Infrastructure.Repositories;
+using Infrastructure.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +15,9 @@ namespace Infrastructure
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
 
             return services;
         }

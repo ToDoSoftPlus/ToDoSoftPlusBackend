@@ -2,7 +2,7 @@
 using Application.Interfaces.UnitOfWork;
 using Infrastructure.DbContext;
 
-namespace Infrastructure.UnitOfWork
+namespace Infrastructure.UnitOfWorks
 {
     public class UnitOfWork : IUnitOfWork
     {
