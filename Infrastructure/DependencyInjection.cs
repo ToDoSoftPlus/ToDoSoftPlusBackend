@@ -18,6 +18,8 @@ namespace Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
+            services.AddScoped<IToDoSubItemRepository, ToDoSubItemRepository>();
+            services.AddScoped<IToDoListRepository, ToDoListRepository>();
 
             return services;
         }
