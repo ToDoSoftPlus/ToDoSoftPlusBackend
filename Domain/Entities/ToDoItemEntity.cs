@@ -14,9 +14,7 @@
         public int ToDoListId { get; set; }
         public ToDoListEntity ToDoList { get; set; } = null!;
 
-        public int? ParentToDoItemId { get; set; }
-        public ToDoItemEntity? ParentToDoItem { get; set; }
-        public ICollection<ToDoItemEntity> SubTasks { get; set; } = new List<ToDoItemEntity>();
+        public ICollection<ToDoSubItemEntity> SubToDoItems { get; set; } = new List<ToDoSubItemEntity>();
 
         public ICollection<MyDayListEntity> MyDayLists { get; set; } = new List<MyDayListEntity>();
     }

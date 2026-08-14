@@ -10,14 +10,12 @@ namespace Application.DTOs.ToDoItem
         public bool IsImportant { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
 
         //public int ToDoListId { get; set; }
         //public ToDoListEntity ToDoList { get; set; } = null!;
 
-        //public int? ParentToDoItemId { get; set; }
-        //public ToDoItemDto? ParentToDoItem { get; set; }
-        //public ICollection<ToDoItemDto> SubTasks { get; set; } = new List<ToDoItemDto>();
 
         //public ICollection<MyDayListEntity> MyDayLists { get; set; } = new List<MyDayListEntity>();
     }
