@@ -8,6 +8,10 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            var currentAssembly = typeof(DependencyInjection).Assembly;
+
+            //Dependency all mapping profiles in current assembly
+            services.AddAutoMapper(cfg => { }, currentAssembly);
 
             services.AddScoped<IToDoItemService, ToDoItemService>();
 
