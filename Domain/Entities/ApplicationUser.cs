@@ -4,7 +4,9 @@ namespace Domain.Entities
 {
     public class ApplicationUser : IdentityUser<int>
     {
-        public ICollection<ToDoCategoryEntity> Categories { get; set; } = new List<ToDoCategoryEntity>();
-        public ICollection<ToDoItemEntity> Items { get; set; } = new List<ToDoItemEntity>();
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<ToDoListEntity> ToDoLists { get; set; } = new List<ToDoListEntity>();
+        public ICollection<MyDayListEntity> MyDayList { get; set; } = new List<MyDayListEntity>();  
     }
 }

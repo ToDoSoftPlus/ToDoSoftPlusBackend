@@ -1,4 +1,5 @@
 using Infrastructure;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Configuration
 
 #region Dependency Injection Projects
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 #endregion
 
