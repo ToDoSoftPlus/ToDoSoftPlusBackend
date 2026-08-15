@@ -60,6 +60,13 @@ namespace Infrastructure.Repositories
                 cancellationToken);
         }
 
+        public async Task<bool> IsExistsByTitleAndUserIdAsync(string title, int userId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ToDoLists
+                .AsNoTracking()
+                .AnyAsync(x => x.Title == title && x.UserId == userId, cancellationToken);
+        }
+
         public void Update(ToDoListEntity item)
         {
             _context.Update(item);

@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.ToDoList;
+using Application.Models.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -15,6 +16,8 @@ namespace Application.MappingProfiles
 
             CreateMap<UpdateToDoListDto, ToDoListEntity>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<PagedResult<ToDoListEntity>, PagedResult<ToDoListDto>>();
         }
     }
 }

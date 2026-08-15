@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.ToDoItem;
+using Application.Exceptions;
 using Application.Interfaces.Services;
 using Application.Interfaces.UnitOfWork;
 using Application.Models.Pagination;
@@ -18,39 +19,65 @@ namespace Application.Services.EF
             _mapper = mapper;
         }
 
-        public Task AddAsync(CreateToDoItemDto createToDoItemDto, CancellationToken token = default)
+        public async Task<ToDoItemDto> AddAsync(CreateToDoItemDto createToDoItemDto, CancellationToken token = default)
         {
+            var list = await _unitOfWork.ToDoListRepository.GetByIdAsync(createToDoItemDto.ToDoListId, token);
+
+            if (list is null)
+            {
+                throw new NotFoundException($"ToDoList with Id '{createToDoItemDto.ToDoListId}' not found.");
+            }
+
             var entity = _mapper.Map<ToDoItemEntity>(createToDoItemDto);
+            _unitOfWork.ToDoItemRepository.Add(entity);
+            await _unitOfWork.SaveChangesAsync(token);
+            return _mapper.Map<ToDoItemDto>(entity);
+        }
 
-            try
+        public async Task DeleteAsync(int id, CancellationToken token = default)
+        {
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(id, token);
+
+            if (entity is null)
             {
-                _unitOfWork.ToDoItemRepository.Add(entity);
-                return _unitOfWork.SaveChangesAsync(token);
+                throw new NotFoundException($"ToDoItem with Id '{id}' not found.");
             }
-            catch (Exception ex)
+
+            _unitOfWork.ToDoItemRepository.Delete(entity);
+            await _unitOfWork.SaveChangesAsync(token);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetAllAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetAllAsync(paginationRequest.Page, paginationRequest.PageSize, token);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public async Task<ToDoItemDto?> GetByIdAsync(int id, CancellationToken token = default)
+        {
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(id, token);
+
+            if (entity is null)
             {
-                throw ex;
+                throw new NotFoundException($"ToDoItem with Id '{id}' not found.");
             }
+
+            return _mapper.Map<ToDoItemDto>(entity);
         }
 
-        public Task DeleteAsync(int id, CancellationToken token = default)
+        public async Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)
         {
-            throw new NotImplementedException();
-        }
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(updateToDoItemDto.Id, token);
 
-        public Task<PagedResult<ToDoItemDto>> GetAllAsync(PaginationRequest paginationRequest, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
-        }
+            if (entity is null)
+            {
+                throw new NotFoundException($"ToDoItem with Id '{updateToDoItemDto.Id}' not found.");
+            }
 
-        public Task<ToDoItemDto?> GetByIdAsync(int id, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
+            _mapper.Map(updateToDoItemDto, entity);
+            _unitOfWork.ToDoItemRepository.Update(entity);
+            await _unitOfWork.SaveChangesAsync(token);
+            return _mapper.Map<ToDoItemDto>(entity);
         }
     }
 }

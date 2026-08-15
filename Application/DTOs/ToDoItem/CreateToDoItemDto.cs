@@ -7,5 +7,7 @@
         public bool IsImportant { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime? CompletedAt { get; set; }
+        public int ToDoListId { get; set; }
+
     }
 }

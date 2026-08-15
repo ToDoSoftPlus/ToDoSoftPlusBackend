@@ -12,8 +12,7 @@ namespace Application.DTOs.ToDoItem
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
-
-        //public int ToDoListId { get; set; }
+        public int ToDoListId { get; set; }
         //public ToDoListEntity ToDoList { get; set; } = null!;
 
 

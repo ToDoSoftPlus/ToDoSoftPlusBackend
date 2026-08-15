@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.ToDoSubItem;
+using Application.Models.Pagination;
 using AutoMapper;
 using Domain.Entities;
 
@@ -15,6 +16,8 @@ namespace Application.MappingProfiles
 
             CreateMap<UpdateToDoSubItemDto, ToDoSubItemEntity>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<PagedResult<ToDoSubItemEntity>, PagedResult<ToDoSubItemDto>>();
         }
     }
 }

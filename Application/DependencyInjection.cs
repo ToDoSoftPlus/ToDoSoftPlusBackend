@@ -14,6 +14,8 @@ namespace Application
             services.AddAutoMapper(cfg => { }, currentAssembly);
 
             services.AddScoped<IToDoItemService, ToDoItemService>();
+            services.AddScoped<IToDoListService, ToDoListService>();
+            services.AddScoped<IToDoSubItemService, ToDoSubItemService>();
 
             return services;
         }
