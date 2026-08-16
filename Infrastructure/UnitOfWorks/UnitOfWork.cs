@@ -10,10 +10,20 @@ namespace Infrastructure.UnitOfWorks
 
         public IToDoItemRepository ToDoItemRepository { get; }
 
-        public UnitOfWork(ApplicationDbContext context, IToDoItemRepository toDoItemRepository)
+        public IToDoListRepository ToDoListRepository { get; }
+
+        public IToDoSubItemRepository ToDoSubItemRepository { get; }
+
+        public UnitOfWork(
+            ApplicationDbContext context, 
+            IToDoItemRepository toDoItemRepository, 
+            IToDoListRepository toDoListRepository, 
+            IToDoSubItemRepository toDoSubItemRepository)
         {
             _context = context;
             ToDoItemRepository = toDoItemRepository;
+            ToDoListRepository = toDoListRepository;
+            ToDoSubItemRepository = toDoSubItemRepository;
         }
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default)
