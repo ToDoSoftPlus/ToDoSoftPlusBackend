@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Interfaces.Services;
+using Application.Services.EF;
+using Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
@@ -6,6 +9,15 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            var currentAssembly = typeof(DependencyInjection).Assembly;
+
+            //Dependency all mapping profiles in current assembly
+            services.AddAutoMapper(cfg => { }, currentAssembly);
+
+            services.AddScoped<IToDoItemService, ToDoItemService>();
+            services.AddScoped<IToDoListService, ToDoListService>();
+            services.AddScoped<IToDoSubItemService, ToDoSubItemService>();
+
             return services;
         }
     }

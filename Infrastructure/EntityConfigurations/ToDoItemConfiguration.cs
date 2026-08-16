@@ -16,14 +16,7 @@ namespace Infrastructure.EntityConfigurations
                 .HasForeignKey(x => x.ToDoListId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder
-                .HasOne(x => x.ParentToDoItem)
-                .WithMany(x => x.SubTasks)
-                .HasForeignKey(x => x.ParentToDoItemId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasIndex(x => x.ToDoListId);
-            builder.HasIndex(x => x.ParentToDoItemId);
             builder.HasIndex(x => x.IsCompleted);
         }
     }

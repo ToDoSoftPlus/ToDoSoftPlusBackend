@@ -12,6 +12,7 @@ namespace Infrastructure.DbContext
 
         public DbSet<ToDoItemEntity> ToDoItems { get; set; }
         public DbSet<ToDoListEntity> ToDoLists { get; set; }
+        public DbSet<ToDoSubItemEntity> ToDoSubItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

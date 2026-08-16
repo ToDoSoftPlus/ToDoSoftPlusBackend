@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities
+﻿using Domain.Entities;
+
+namespace Application.DTOs.ToDoItem
 {
-    public class ToDoItemEntity
+    public class ToDoItemDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
@@ -10,12 +12,10 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
-
         public int ToDoListId { get; set; }
-        public ToDoListEntity ToDoList { get; set; } = null!;
+        //public ToDoListEntity ToDoList { get; set; } = null!;
 
-        public ICollection<ToDoSubItemEntity> SubToDoItems { get; set; } = new List<ToDoSubItemEntity>();
 
-        public ICollection<MyDayListEntity> MyDayLists { get; set; } = new List<MyDayListEntity>();
+        //public ICollection<MyDayListEntity> MyDayLists { get; set; } = new List<MyDayListEntity>();
     }
 }
