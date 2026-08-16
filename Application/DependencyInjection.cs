@@ -27,6 +27,7 @@ namespace Application
             services.AddScoped<IToDoItemService, ToDoItemService>();
             services.AddScoped<IToDoListService, ToDoListService>();
             services.AddScoped<IToDoSubItemService, ToDoSubItemService>();
+            services.AddScoped<IJwtService, JwtService>();
 
             return services;
         }

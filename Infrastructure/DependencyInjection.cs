@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces.Repositories;
+using Application.Interfaces.Services.Identity;
 using Application.Interfaces.UnitOfWork;
 using Domain.Entities;
 using Infrastructure.DbContext;
+using Infrastructure.Identity;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,7 @@ namespace Infrastructure
             services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
             services.AddScoped<IToDoSubItemRepository, ToDoSubItemRepository>();
             services.AddScoped<IToDoListRepository, ToDoListRepository>();
+            services.AddScoped<IJwtService, JwtService>();
 
             return services;
         }
