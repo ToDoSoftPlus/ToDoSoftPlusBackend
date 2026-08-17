@@ -1,5 +1,8 @@
-using Infrastructure;
 using Application;
+using Domain.Entities;
+using Infrastructure;
+using Infrastructure.Seeders;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,16 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+#region Seeders
+//Seed roles in the database
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+}
+#endregion
+
 
 if (app.Environment.IsDevelopment())
 {
