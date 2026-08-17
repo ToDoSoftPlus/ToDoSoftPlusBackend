@@ -2,7 +2,6 @@
 using Application.Exceptions;
 using Application.Interfaces.Services.Identity;
 using AutoMapper;
-using Azure.Core;
 using Domain.Constant;
 using Domain.Entities;
 using Infrastructure.Exceptions;
@@ -50,11 +49,6 @@ namespace Infrastructure.Identity
             };
         }
 
-        public async Task LogoutAsync(int userId, CancellationToken token)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<AuthResponse> RegisterAsync(RegisterDto registerDto, CancellationToken token)
         {
             var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
@@ -99,6 +93,11 @@ namespace Infrastructure.Identity
                 Token = accessToken.Token,
                 ExpiresAt = accessToken.ExpiresAt
             };
+        }
+
+        public async Task LogoutAsync(int userId, CancellationToken token)
+        {
+            throw new NotImplementedException();
         }
     }
 }
