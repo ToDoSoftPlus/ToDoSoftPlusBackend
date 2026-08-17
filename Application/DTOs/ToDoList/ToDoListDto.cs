@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.ToDoItem;
 
 namespace Application.DTOs.ToDoList
 {
@@ -12,6 +12,6 @@ namespace Application.DTOs.ToDoList
 
         public int UserId { get; set; }
         //public ApplicationUser User { get; set; } = null!;
-        public ICollection<ToDoItemEntity> ToDoItemsList { get; set; } = new List<ToDoItemEntity>();
+        public ICollection<ToDoItemDto> ToDoItemsList { get; set; } = new List<ToDoItemDto>();
     }
 }

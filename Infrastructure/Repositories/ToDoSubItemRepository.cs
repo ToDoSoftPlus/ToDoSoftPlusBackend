@@ -25,9 +25,9 @@ namespace Infrastructure.Repositories
             _context.Remove(item);
         }
 
-        public async Task<PagedResult<ToDoSubItemEntity>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PagedResult<ToDoSubItemEntity>> GetAllAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
         {
-            var query = _context.ToDoSubItems.AsNoTracking();
+            var query = _context.ToDoSubItems.AsNoTracking().Where(x => x.ToDoItem.ToDoList.UserId == userId);
 
             var totalCount = await query.CountAsync(cancellationToken);
 
@@ -50,13 +50,11 @@ namespace Infrastructure.Repositories
             };
         }
 
-        public async Task<ToDoSubItemEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ToDoSubItemEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default)
         {
             return await _context.ToDoSubItems
                 .AsNoTracking()
-                .FirstOrDefaultAsync(
-                    x => x.Id == id,
-                    cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == id && x.ToDoItem.ToDoList.UserId == userId, cancellationToken);
         }
 
         public void Update(ToDoSubItemEntity item)
