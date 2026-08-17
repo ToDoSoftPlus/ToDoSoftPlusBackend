@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.ToDoItem
+﻿using Application.DTOs.ToDoSubItem;
+
+namespace Application.DTOs.ToDoItem
 {
     public class ToDoItemDto
     {
@@ -11,8 +13,7 @@
         public DateTime UpdatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public int ToDoListId { get; set; }
-        //public ToDoListEntity ToDoList { get; set; } = null!;
-
+        public ICollection<ToDoSubItemDto> SubToDoItems { get; set; } = new List<ToDoSubItemDto>();
 
         //public ICollection<MyDayListEntity> MyDayLists { get; set; } = new List<MyDayListEntity>();
     }

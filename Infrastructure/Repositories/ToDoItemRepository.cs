@@ -29,9 +29,7 @@ namespace Infrastructure.Repositories
         {
             var query = _context.ToDoItems
                 .AsNoTracking()
-                .Join(_context.ToDoLists, item => item.ToDoListId, list => list.Id, (item, list) => new { Item = item, List = list })
-                .Where(x => x.List.UserId == userId)
-                .Select(x => x.Item);
+                .Where(x => x.ToDoList.UserId == userId);
 
             var totalCount = await query.CountAsync(cancellationToken);
 
@@ -59,10 +57,9 @@ namespace Infrastructure.Repositories
         {
             return await _context.ToDoItems
                 .AsNoTracking()
-                .Join(_context.ToDoLists, item => item.ToDoListId, list => list.Id, (item, list) => new { Item = item, List = list })
-                .Where(x => x.List.UserId == userId && x.Item.Id == id)
-                .Select(x => x.Item)
-                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+                .Include(x => x.SubToDoItems)
+                .Where(x => x.ToDoList.UserId == userId && x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
         public void Update(ToDoItemEntity item)

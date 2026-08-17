@@ -5,9 +5,9 @@ using Domain.Entities;
 
 namespace Application.MappingProfiles
 {
-    public class ToDoSubItemDto : Profile
+    public class ToDoSubItemMappingProfile : Profile
     {
-        public ToDoSubItemDto()
+        public ToDoSubItemMappingProfile()
         {
             CreateMap<ToDoSubItemDto, ToDoSubItemEntity>().ReverseMap();
 
