@@ -1,7 +1,7 @@
 ﻿using Application.DTOs.ToDoList;
 using Application.Models.Pagination;
 
-namespace Application.Interfaces.Services
+namespace Application.Interfaces.Services.EF
 {
     public interface IToDoListService
     {
