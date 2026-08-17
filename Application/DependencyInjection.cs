@@ -1,9 +1,10 @@
 ﻿using Application.Interfaces.Services.EF;
+using Application.Interfaces.Services.Validation;
 using Application.Models.Identity;
 using Application.OptionsValidators;
 using Application.Services.EF;
+using Application.Services.Validation;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -21,9 +22,6 @@ namespace Application
             //Dependency all validators in current assembly
             services.AddValidatorsFromAssembly(currentAssembly);
 
-            //Enable automatic validation of models using FluentValidation
-            services.AddFluentValidationAutoValidation();
-
             services
                 .AddOptions<JwtOptions>()
                 .BindConfiguration(JwtOptions.SectionName)
@@ -34,6 +32,7 @@ namespace Application
             services.AddScoped<IToDoItemService, ToDoItemService>();
             services.AddScoped<IToDoListService, ToDoListService>();
             services.AddScoped<IToDoSubItemService, ToDoSubItemService>();
+            services.AddScoped<IValidationService, ValidationService>();
 
             return services;
         }
