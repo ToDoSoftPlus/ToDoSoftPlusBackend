@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.DTOs.ToDoItem
+﻿namespace Application.DTOs.ToDoItem
 {
     public class ToDoItemDto
     {

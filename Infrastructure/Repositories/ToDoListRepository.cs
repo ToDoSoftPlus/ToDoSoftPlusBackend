@@ -54,10 +54,9 @@ namespace Infrastructure.Repositories
         public async Task<ToDoListEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default)
         {
             return await _context.ToDoLists
-            .AsNoTracking()
-            .FirstOrDefaultAsync(
-                x => x.Id == id && x.UserId == userId,
-                cancellationToken);
+                .AsNoTracking()
+                .Include(x => x.ToDoItemsList)
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, cancellationToken);
         }
 
         public async Task<bool> IsExistsByTitleAndUserIdAsync(string title, int userId, CancellationToken cancellationToken = default)

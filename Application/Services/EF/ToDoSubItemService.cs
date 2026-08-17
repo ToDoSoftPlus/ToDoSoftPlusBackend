@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.ToDoSubItem;
 using Application.Exceptions;
 using Application.Interfaces.Services.EF;
+using Application.Interfaces.Services.Identity;
 using Application.Interfaces.UnitOfWork;
 using Application.Models.Pagination;
 using AutoMapper;
@@ -12,16 +13,18 @@ namespace Application.Services.EF
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly int _currentUserId;
 
-        public ToDoSubItemService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ToDoSubItemService(IUnitOfWork unitOfWork, IMapper mapper, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _currentUserId = currentUserService.UserId;
         }
 
         public async Task<ToDoSubItemDto> AddAsync(CreateToDoSubItemDto createToDoSubItemDto, CancellationToken token = default)
         {
-            if (_unitOfWork.ToDoItemRepository.GetByIdAsync(createToDoSubItemDto.ToDoItemId) is null)
+            if (_unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, createToDoSubItemDto.ToDoItemId, token) is null)
             {
                 throw new NotFoundException($"To-do item with ID '{createToDoSubItemDto.ToDoItemId}' not found.");
             }

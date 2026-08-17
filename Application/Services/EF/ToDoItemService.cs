@@ -39,7 +39,7 @@ namespace Application.Services.EF
 
         public async Task DeleteAsync(int id, CancellationToken token = default)
         {
-            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(id, token);
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, id, token);
 
             if (entity is null)
             {
@@ -52,13 +52,13 @@ namespace Application.Services.EF
 
         public async Task<PagedResult<ToDoItemDto>> GetAllAsync(PaginationRequest paginationRequest, CancellationToken token = default)
         {
-            var toDoItems = await _unitOfWork.ToDoItemRepository.GetAllAsync(paginationRequest.Page, paginationRequest.PageSize, token);
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetAllAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize, token);
             return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
         }
 
         public async Task<ToDoItemDto?> GetByIdAsync(int id, CancellationToken token = default)
         {
-            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(id, token);
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, id, token);
 
             if (entity is null)
             {
@@ -70,7 +70,7 @@ namespace Application.Services.EF
 
         public async Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)
         {
-            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(updateToDoItemDto.Id, token);
+            var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, updateToDoItemDto.Id, token);
 
             if (entity is null)
             {
@@ -78,6 +78,8 @@ namespace Application.Services.EF
             }
 
             _mapper.Map(updateToDoItemDto, entity);
+            entity.UpdatedAt = DateTime.UtcNow;
+
             _unitOfWork.ToDoItemRepository.Update(entity);
             await _unitOfWork.SaveChangesAsync(token);
             return _mapper.Map<ToDoItemDto>(entity);

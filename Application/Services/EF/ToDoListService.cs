@@ -60,6 +60,12 @@ namespace Application.Services.EF
         public async Task<ToDoListDto?> GetByIdAsync(int id, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, id, token);
+
+            if (entity is null)
+            {
+                throw new NotFoundException($"ToDoList with Id '{id}' not found.");
+            }
+
             return entity is not null ? _mapper.Map<ToDoListDto>(entity) : null;
         }
 
