@@ -45,6 +45,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 #region Seeders
@@ -55,7 +57,6 @@ using (var scope = app.Services.CreateScope())
     await IdentitySeeder.SeedRolesAsync(roleManager);
 }
 #endregion
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -69,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

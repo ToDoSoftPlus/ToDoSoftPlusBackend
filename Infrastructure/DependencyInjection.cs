@@ -6,9 +6,12 @@ using Infrastructure.DbContext;
 using Infrastructure.Identity;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWorks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Infrastructure
 {
@@ -27,7 +30,7 @@ namespace Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             //Identity
-            services.AddIdentityCore<ApplicationUser>(options => 
+            services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
@@ -39,12 +42,35 @@ namespace Infrastructure
                 .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //Jwt
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = configuration["JwtOptions:Issuer"],
+                            ValidAudience = configuration["JwtOptions:Audience"],
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:SecretKey"]!))
+                        };
+                });
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
             services.AddScoped<IToDoSubItemRepository, ToDoSubItemRepository>();
             services.AddScoped<IToDoListRepository, ToDoListRepository>();
+
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
         }
