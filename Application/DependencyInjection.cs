@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Services.EF;
+using Application.Interfaces.Services.Identity;
 using Application.Models.Identity;
 using Application.OptionsValidators;
 using Application.Services.EF;
@@ -27,7 +28,6 @@ namespace Application
             services.AddScoped<IToDoItemService, ToDoItemService>();
             services.AddScoped<IToDoListService, ToDoListService>();
             services.AddScoped<IToDoSubItemService, ToDoSubItemService>();
-            services.AddScoped<IJwtService, JwtService>();
 
             return services;
         }

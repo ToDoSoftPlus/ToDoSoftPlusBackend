@@ -44,6 +44,7 @@ namespace Infrastructure
             services.AddScoped<IToDoSubItemRepository, ToDoSubItemRepository>();
             services.AddScoped<IToDoListRepository, ToDoListRepository>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IIdentityService, IdentityService>();
 
             return services;
         }
