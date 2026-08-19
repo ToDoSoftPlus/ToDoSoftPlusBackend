@@ -49,8 +49,8 @@ namespace UnitTests.Services
         {
             var createToDoListDto = new CreateToDoListDto { Title = "Existing Title" };
 
-            _repositoryMock
-                .Setup(x => x.IsExistsByTitleAndUserIdAsync(createToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.IsExistsByTitleAndUserIdAsync(createToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             Func<Task> act = async () => await _service.AddAsync(createToDoListDto);
@@ -79,8 +79,8 @@ namespace UnitTests.Services
                 UserId = toDoListEntity.UserId
             };
 
-            _repositoryMock
-                .Setup(x => x.IsExistsByTitleAndUserIdAsync(createToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.IsExistsByTitleAndUserIdAsync(createToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             _mapperMock
@@ -96,7 +96,7 @@ namespace UnitTests.Services
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(excpectedDto);
 
-            _repositoryMock.Verify(x => x.Add(It.IsAny<ToDoListEntity>()), Times.Once);
+            _unitOfWorkMock.Verify(x => x.ToDoListRepository.Add(It.IsAny<ToDoListEntity>()), Times.Once);
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -105,8 +105,8 @@ namespace UnitTests.Services
         {
             int listId = 1;
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ToDoListEntity?)null);
 
             Func<Task> act = async () => await _service.DeleteAsync(listId);
@@ -126,13 +126,13 @@ namespace UnitTests.Services
                 UserId = CurrentUserId
             };
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(toDoListEntity);
 
             await _service.DeleteAsync(listId, CancellationToken.None);
 
-            _repositoryMock.Verify(x => x.Delete(toDoListEntity), Times.Once);
+            _unitOfWorkMock.Verify(x => x.ToDoListRepository.Delete(toDoListEntity), Times.Once);
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -141,11 +141,12 @@ namespace UnitTests.Services
         {
             int listId = 1;
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ToDoListEntity?)null);
 
             Func<Task> act = async () => await _service.GetByIdAsync(listId);
+
             await act.Should().ThrowAsync<NotFoundException>();
         }
 
@@ -170,8 +171,8 @@ namespace UnitTests.Services
                 UserId = CurrentUserId
             };
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, listId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(toDoListEntity);
 
             _mapperMock
@@ -219,8 +220,8 @@ namespace UnitTests.Services
                 TotalPages = 1
             };
 
-            _repositoryMock
-                .Setup(x => x.GetAllAsync(CurrentUserId, paginationRequest.Page, paginationRequest.PageSize, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetAllAsync(CurrentUserId, paginationRequest.Page, paginationRequest.PageSize, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(pagedResultEntity);
 
             _mapperMock
@@ -238,8 +239,8 @@ namespace UnitTests.Services
         {
             var updateToDoListDto = new UpdateToDoListDto { Id = 1, Title = "Updated Title", Description = "Updated Description" };
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ToDoListEntity?)null);
 
             Func<Task> act = async () => await _service.UpdateAsync(updateToDoListDto);
@@ -260,12 +261,12 @@ namespace UnitTests.Services
                 UserId = CurrentUserId
             };
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingEntity);
 
-            _repositoryMock
-                .Setup(x => x.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             Func<Task> act = async () => await _service.UpdateAsync(updateToDoListDto);
@@ -294,12 +295,12 @@ namespace UnitTests.Services
                 UserId = CurrentUserId
             };
 
-            _repositoryMock
-                .Setup(x => x.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, updateToDoListDto.Id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingEntity);
 
-            _repositoryMock
-                .Setup(x => x.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(x => x.ToDoListRepository.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, CurrentUserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             _mapperMock
@@ -319,7 +320,7 @@ namespace UnitTests.Services
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedDto);
 
-            _repositoryMock.Verify(x => x.Update(existingEntity), Times.Once);
+            _unitOfWorkMock.Verify(x => x.ToDoListRepository.Update(existingEntity), Times.Once);
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
