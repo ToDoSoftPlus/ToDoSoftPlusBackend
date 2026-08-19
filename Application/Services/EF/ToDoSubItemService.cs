@@ -24,9 +24,9 @@ namespace Application.Services.EF
 
         public async Task<ToDoSubItemDto> AddAsync(CreateToDoSubItemDto createToDoSubItemDto, CancellationToken token = default)
         {
-            if (_unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, createToDoSubItemDto.ToDoItemId, token) is null)
+            if (await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, createToDoSubItemDto.ToDoItemId, token) is null)
             {
-                throw new NotFoundException($"To-do sub-item with ID '{createToDoSubItemDto.ToDoItemId}' not found.");
+                throw new NotFoundException($"To-do item with ID '{createToDoSubItemDto.ToDoItemId}' not found.");
             }
 
             var entity = _mapper.Map<ToDoSubItemEntity>(createToDoSubItemDto);
@@ -63,7 +63,7 @@ namespace Application.Services.EF
                 throw new NotFoundException($"To-do sub-item with Id '{id}' not found.");
             }
 
-            return entity is not null ? _mapper.Map<ToDoSubItemDto>(entity) : null;
+            return _mapper.Map<ToDoSubItemDto>(entity);
         }
 
         public async Task<ToDoSubItemDto> UpdateAsync(UpdateToDoSubItemDto updateToDoSubItemDto, CancellationToken token = default)
