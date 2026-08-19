@@ -56,7 +56,7 @@ namespace Application.Services.EF
             return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
         }
 
-        public async Task<ToDoItemDto?> GetByIdAsync(int id, CancellationToken token = default)
+        public async Task<ToDoItemDto> GetByIdAsync(int id, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, id, token);
 
