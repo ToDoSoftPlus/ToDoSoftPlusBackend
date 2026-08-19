@@ -6,5 +6,6 @@
   <Project Path="Application/Application.csproj" />
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
+  <Project Path="UnitTests/UnitTests.csproj" Id="86bc1568-5f8a-43ac-be73-a861ddefb03b" />
   <Project Path="WebAPI/WebAPI.csproj" />
 </Solution>

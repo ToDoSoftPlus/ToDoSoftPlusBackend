@@ -57,7 +57,7 @@ namespace Application.Services.EF
             return _mapper.Map<PagedResult<ToDoListDto>>(toDoLists);
         }
 
-        public async Task<ToDoListDto?> GetByIdAsync(int id, CancellationToken token = default)
+        public async Task<ToDoListDto> GetByIdAsync(int id, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, id, token);
 
@@ -66,7 +66,7 @@ namespace Application.Services.EF
                 throw new NotFoundException($"ToDoList with Id '{id}' not found.");
             }
 
-            return entity is not null ? _mapper.Map<ToDoListDto>(entity) : null;
+            return _mapper.Map<ToDoListDto>(entity);
         }
 
         public async Task<ToDoListDto> UpdateAsync(UpdateToDoListDto updateToDoListDto, CancellationToken token = default)
