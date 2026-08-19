@@ -319,6 +319,7 @@ namespace UnitTests.Services
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedDto);
 
+            _repositoryMock.Verify(x => x.Update(existingEntity), Times.Once);
             _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
