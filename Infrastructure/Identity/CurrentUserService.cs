@@ -1,5 +1,9 @@
-﻿using Application.Interfaces.Services.Identity;
+﻿using Application.DTOs.User;
+using Application.Interfaces.Services.Identity;
+using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace Infrastructure.Identity
@@ -7,10 +11,16 @@ namespace Infrastructure.Identity
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
+            _mapper = mapper;
         }
+
         public int UserId
         {
             get
@@ -34,6 +44,18 @@ namespace Infrastructure.Identity
 
                 return id;
             }
+        }
+
+        public async Task<UserDto> GetCurrentUserInfoAsync()
+        {
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            };
+
+            return _mapper.Map<UserDto>(user);
         }
     }
 }
