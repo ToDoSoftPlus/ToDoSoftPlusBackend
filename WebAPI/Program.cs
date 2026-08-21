@@ -20,7 +20,6 @@ builder.Configuration
 #region Dependency Injection Projects
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-
 #endregion
 
 #region NSwag
@@ -42,6 +41,21 @@ builder.Services.AddOpenApiDocument(document =>
 });
 #endregion
 
+#region CORS
+var frontendOrigins = builder.Configuration.GetSection("Cors").GetSection("AllowedOrigins").Get<string[]>();
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+            .WithOrigins(frontendOrigins!)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+#endregion
+
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
@@ -49,6 +63,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+app.UseCors("FrontendPolicy");
 
 #region Seeders
 //Seed roles in the database

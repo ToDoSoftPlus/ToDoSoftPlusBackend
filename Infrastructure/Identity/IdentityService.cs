@@ -46,8 +46,8 @@ namespace Infrastructure.Identity
             return new AuthResponse
             {
                 UserInfo = _mapper.Map<UserDto>(user),
-                Token = accessToken.Token,
-                ExpiresAt = accessToken.ExpiresAt
+                AccessToken = accessToken.Token,
+                AccessTokenExpiresAt = accessToken.ExpiresAt
             };
         }
 
@@ -93,8 +93,8 @@ namespace Infrastructure.Identity
             return new AuthResponse
             {
                 UserInfo = _mapper.Map<UserDto>(user),
-                Token = accessToken.Token,
-                ExpiresAt = accessToken.ExpiresAt
+                AccessToken = accessToken.Token,
+                AccessTokenExpiresAt = accessToken.ExpiresAt
             };
         }
 

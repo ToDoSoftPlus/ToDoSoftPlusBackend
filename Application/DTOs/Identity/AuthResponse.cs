@@ -6,7 +6,7 @@ namespace Application.DTOs.Identity
     {
         public UserDto UserInfo { get; set; } = null!;
 
-        public string Token { get; set; } = string.Empty;
-        public DateTime ExpiresAt { get; set; }
+        public string AccessToken { get; set; } = string.Empty;
+        public DateTime AccessTokenExpiresAt { get; set; }
     }
 }
