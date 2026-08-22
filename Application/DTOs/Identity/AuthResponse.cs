@@ -1,8 +1,12 @@
-﻿namespace Application.DTOs.Identity
+﻿using Application.DTOs.User;
+
+namespace Application.DTOs.Identity
 {
     public class AuthResponse
     {
-        public string Token { get; set; } = string.Empty;
-        public DateTime ExpiresAt { get; set; }
+        public UserDto UserInfo { get; set; } = null!;
+
+        public string AccessToken { get; set; } = string.Empty;
+        public DateTime AccessTokenExpiresAt { get; set; }
     }
 }

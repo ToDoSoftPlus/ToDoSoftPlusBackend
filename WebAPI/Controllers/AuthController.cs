@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
+    [ApiController]
+    [Route("api/v1/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IIdentityService _identityService;

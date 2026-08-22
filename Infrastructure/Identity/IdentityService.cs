@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Identity;
+using Application.DTOs.User;
 using Application.Exceptions;
 using Application.Interfaces.Services.Identity;
 using AutoMapper;
@@ -44,8 +45,9 @@ namespace Infrastructure.Identity
 
             return new AuthResponse
             {
-                Token = accessToken.Token,
-                ExpiresAt = accessToken.ExpiresAt
+                UserInfo = _mapper.Map<UserDto>(user),
+                AccessToken = accessToken.Token,
+                AccessTokenExpiresAt = accessToken.ExpiresAt
             };
         }
 
@@ -90,8 +92,9 @@ namespace Infrastructure.Identity
 
             return new AuthResponse
             {
-                Token = accessToken.Token,
-                ExpiresAt = accessToken.ExpiresAt
+                UserInfo = _mapper.Map<UserDto>(user),
+                AccessToken = accessToken.Token,
+                AccessTokenExpiresAt = accessToken.ExpiresAt
             };
         }
 
