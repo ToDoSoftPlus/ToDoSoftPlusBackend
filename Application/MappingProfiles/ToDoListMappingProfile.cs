@@ -17,7 +17,14 @@ namespace Application.MappingProfiles
             CreateMap<UpdateToDoListDto, ToDoListEntity>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+            CreateMap<ToDoListEntity, ToDoSidebarListDto>()
+                .ForMember(
+                    dest => dest.CountItems,
+                    opt => opt.MapFrom(source => source.ToDoItemsList.Count)
+                );
+
             CreateMap<PagedResult<ToDoListEntity>, PagedResult<ToDoListDto>>();
+            CreateMap<PagedResult<ToDoListEntity>, PagedResult<ToDoSidebarListDto>>();
         }
     }
 }

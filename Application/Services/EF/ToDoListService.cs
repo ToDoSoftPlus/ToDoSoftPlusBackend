@@ -28,7 +28,7 @@ namespace Application.Services.EF
             {
                 throw new AlreadyExistsException($"A to-do list with title '{createToDoListDto.Title}' already exists.");
             }
-            
+
             var entity = _mapper.Map<ToDoListEntity>(createToDoListDto);
 
             entity.UserId = _currentUserId;
@@ -67,6 +67,12 @@ namespace Application.Services.EF
             }
 
             return _mapper.Map<ToDoListDto>(entity);
+        }
+
+        public async Task<PagedResult<ToDoSidebarListDto>> GetSidebarListsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var lists = await _unitOfWork.ToDoListRepository.GetAllWithItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize, token);
+            return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);
         }
 
         public async Task<ToDoListDto> UpdateAsync(UpdateToDoListDto updateToDoListDto, CancellationToken token = default)

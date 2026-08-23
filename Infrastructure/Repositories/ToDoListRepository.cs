@@ -51,6 +51,35 @@ namespace Infrastructure.Repositories
             };
         }
 
+        public async Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ToDoLists
+                .AsNoTracking()
+                .Include(x => x.ToDoItemsList)
+                .Where(x => x.UserId == userId);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PagedResult<ToDoListEntity>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1
+            };
+        }
+
         public async Task<ToDoListEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default)
         {
             return await _context.ToDoLists

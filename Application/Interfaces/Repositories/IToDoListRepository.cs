@@ -7,6 +7,7 @@ namespace Application.Interfaces.Repositories
     {
         Task<ToDoListEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default);
         Task<PagedResult<ToDoListEntity>> GetAllAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
         void Add(ToDoListEntity item);
         void Update(ToDoListEntity item);
         void Delete(ToDoListEntity item);
