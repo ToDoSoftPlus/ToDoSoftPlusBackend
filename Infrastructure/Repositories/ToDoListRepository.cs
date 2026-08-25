@@ -84,7 +84,6 @@ namespace Infrastructure.Repositories
         {
             return await _context.ToDoLists
                 .AsNoTracking()
-                .Include(x => x.ToDoItemsList)
                 .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, cancellationToken);
         }
 
@@ -93,6 +92,13 @@ namespace Infrastructure.Repositories
             return await _context.ToDoLists
                 .AsNoTracking()
                 .AnyAsync(x => x.Title == title && x.UserId == userId, cancellationToken);
+        }
+
+        public async Task<bool> IsExistsByTitleAndUserIdInAdditionCurrentListIdAsync(string title, int userId, int currentListId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ToDoLists
+                .AsNoTracking()
+                .AnyAsync(x => x.Title == title && x.UserId == userId && x.Id != currentListId, cancellationToken);
         }
 
         public void Update(ToDoListEntity item)

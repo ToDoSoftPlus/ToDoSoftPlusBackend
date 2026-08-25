@@ -12,5 +12,6 @@ namespace Application.Interfaces.Repositories
         void Update(ToDoListEntity item);
         void Delete(ToDoListEntity item);
         Task<bool> IsExistsByTitleAndUserIdAsync(string title, int userId, CancellationToken cancellationToken = default);
+        Task<bool> IsExistsByTitleAndUserIdInAdditionCurrentListIdAsync(string title, int userId, int currentListId, CancellationToken cancellationToken = default);
     }
 }

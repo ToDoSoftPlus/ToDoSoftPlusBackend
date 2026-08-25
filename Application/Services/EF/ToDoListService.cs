@@ -1,4 +1,5 @@
-﻿using Application.DTOs.ToDoList;
+﻿using Application.DTOs.ToDoItem;
+using Application.DTOs.ToDoList;
 using Application.Exceptions;
 using Application.Interfaces.Services.EF;
 using Application.Interfaces.Services.Identity;
@@ -82,7 +83,7 @@ namespace Application.Services.EF
                 throw new NotFoundException($"To-do list with ID '{updateToDoListDto.Id}' not found.");
             }
 
-            if (await _unitOfWork.ToDoListRepository.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, _currentUserId, token))
+            if (await _unitOfWork.ToDoListRepository.IsExistsByTitleAndUserIdInAdditionCurrentListIdAsync(updateToDoListDto.Title, _currentUserId, updateToDoListDto.Id, token))
             {
                 throw new AlreadyExistsException($"A to-do list with title '{updateToDoListDto.Title}' already exists.");
             }

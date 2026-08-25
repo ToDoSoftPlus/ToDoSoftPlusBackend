@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             await _validationService.ValidateAsync(dto, cancellationToken);
 
             var toDoList = await _toDoListService.AddAsync(dto, cancellationToken);
-            return CreatedAtAction(nameof(Get), new { id = toDoList.Id });
+            return CreatedAtAction(nameof(Get), new { id = toDoList.Id }, dto);
         }
 
         [HttpPut]
