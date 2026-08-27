@@ -7,6 +7,7 @@ namespace Application.Interfaces.Repositories
     {
         Task<ToDoSubItemEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default);
         Task<PagedResult<ToDoSubItemEntity>> GetAllAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
+        Task<ICollection<ToDoSubItemEntity>> GetAllSubItemsInItemAsync(int userId, int itemId, CancellationToken cancellationToken = default);
         void Add(ToDoSubItemEntity item);
         void Update(ToDoSubItemEntity item);
         void Delete(ToDoSubItemEntity item);

@@ -54,6 +54,12 @@ namespace Application.Services.EF
             return _mapper.Map<PagedResult<ToDoSubItemDto>>(toDoSubItems);
         }
 
+        public async Task<ICollection<ToDoSubItemDto>> GetAllSubItemsInItemAsync(int itemId, CancellationToken token = default)
+        {
+            var toDoSubItem = await _unitOfWork.ToDoSubItemRepository.GetAllSubItemsInItemAsync(_currentUserId, itemId, token);
+            return _mapper.Map<List<ToDoSubItemDto>>(toDoSubItem);
+        }
+
         public async Task<ToDoSubItemDto?> GetByIdAsync(int id, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoSubItemRepository.GetByIdAsync(_currentUserId, id, token);

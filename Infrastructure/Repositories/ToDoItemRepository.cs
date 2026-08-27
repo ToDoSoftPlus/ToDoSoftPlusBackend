@@ -57,7 +57,6 @@ namespace Infrastructure.Repositories
         {
             return await _context.ToDoItems
                 .AsNoTracking()
-                .Include(x => x.SubToDoItems)
                 .Where(x => x.ToDoList.UserId == userId && x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
         }
