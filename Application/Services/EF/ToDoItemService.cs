@@ -68,6 +68,17 @@ namespace Application.Services.EF
             return _mapper.Map<ToDoItemDto>(entity);
         }
 
+        public async Task<PagedResult<ToDoItemDto>> GetItemsInListAsync(int listId, PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            if (await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, listId, token) is not ToDoListEntity)
+            {
+                throw new NotFoundException($"ToDoList with id '{listId}' not found.");
+            }
+
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetItemsInListAsync(_currentUserId, listId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
         public async Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, updateToDoItemDto.Id, token);

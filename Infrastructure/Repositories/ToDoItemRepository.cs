@@ -57,9 +57,36 @@ namespace Infrastructure.Repositories
         {
             return await _context.ToDoItems
                 .AsNoTracking()
-                .Include(x => x.SubToDoItems)
                 .Where(x => x.ToDoList.UserId == userId && x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<PagedResult<ToDoItemEntity>> GetItemsInListAsync(int userId, int listId, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ToDoItems
+                .AsNoTracking()
+                .Where(x => x.ToDoList.UserId == userId && x.ToDoListId == listId);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PagedResult<ToDoItemEntity>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1
+            };
         }
 
         public void Update(ToDoItemEntity item)

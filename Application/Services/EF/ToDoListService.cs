@@ -1,4 +1,5 @@
-﻿using Application.DTOs.ToDoList;
+﻿using Application.DTOs.ToDoItem;
+using Application.DTOs.ToDoList;
 using Application.Exceptions;
 using Application.Interfaces.Services.EF;
 using Application.Interfaces.Services.Identity;
@@ -28,7 +29,7 @@ namespace Application.Services.EF
             {
                 throw new AlreadyExistsException($"A to-do list with title '{createToDoListDto.Title}' already exists.");
             }
-            
+
             var entity = _mapper.Map<ToDoListEntity>(createToDoListDto);
 
             entity.UserId = _currentUserId;
@@ -69,6 +70,12 @@ namespace Application.Services.EF
             return _mapper.Map<ToDoListDto>(entity);
         }
 
+        public async Task<PagedResult<ToDoSidebarListDto>> GetSidebarListsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var lists = await _unitOfWork.ToDoListRepository.GetAllWithItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize, token);
+            return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);
+        }
+
         public async Task<ToDoListDto> UpdateAsync(UpdateToDoListDto updateToDoListDto, CancellationToken token = default)
         {
             if (await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, updateToDoListDto.Id, token) is not ToDoListEntity entity)
@@ -76,7 +83,7 @@ namespace Application.Services.EF
                 throw new NotFoundException($"To-do list with ID '{updateToDoListDto.Id}' not found.");
             }
 
-            if (await _unitOfWork.ToDoListRepository.IsExistsByTitleAndUserIdAsync(updateToDoListDto.Title, _currentUserId, token))
+            if (await _unitOfWork.ToDoListRepository.IsExistsByTitleAndUserIdInAdditionCurrentListIdAsync(updateToDoListDto.Title, _currentUserId, updateToDoListDto.Id, token))
             {
                 throw new AlreadyExistsException($"A to-do list with title '{updateToDoListDto.Title}' already exists.");
             }

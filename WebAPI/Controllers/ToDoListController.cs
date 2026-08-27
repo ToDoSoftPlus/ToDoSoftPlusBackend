@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/v1/todo-lists")]
+    [Route("api/v1/todo-list")]
     public class ToDoListController : ControllerBase
     {
         private readonly IToDoListService _toDoListService;
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             await _validationService.ValidateAsync(dto, cancellationToken);
 
             var toDoList = await _toDoListService.AddAsync(dto, cancellationToken);
-            return CreatedAtAction(nameof(Get), new { id = toDoList.Id });
+            return CreatedAtAction(nameof(Get), new { id = toDoList.Id }, dto);
         }
 
         [HttpPut]
@@ -64,6 +64,16 @@ namespace WebAPI.Controllers
 
             var toDoLists = await _toDoListService.GetAllAsync(paginationRequest, cancellationToken);
             return Ok(toDoLists);
+        }
+
+        [HttpGet("sidebar")]
+        [Authorize]
+        public async Task<IActionResult> GetSidebarLists([FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoSidebarLists = await _toDoListService.GetSidebarListsAsync(paginationRequest, cancellationToken);
+            return Ok(toDoSidebarLists);
         }
     }
 }

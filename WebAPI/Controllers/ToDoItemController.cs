@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/v1/todo-items")]
+    [Route("api/v1/todo-item")]
     public class ToDoItemController : ControllerBase
     {
         private readonly IToDoItemService _toDoItemService;
@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             await _validationService.ValidateAsync(dto, cancellationToken);
 
             var toDoItem = await _toDoItemService.AddAsync(dto, cancellationToken);
-            return CreatedAtAction(nameof(Get), new { id = toDoItem.Id });
+            return CreatedAtAction(nameof(Get), new { id = toDoItem.Id }, dto);
         }
 
         [HttpPut]
@@ -63,6 +63,16 @@ namespace WebAPI.Controllers
             await _validationService.ValidateAsync(paginationRequest, cancellationToken);
 
             var toDoItems = await _toDoItemService.GetAllAsync(paginationRequest, cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("list/{listId}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int listId, [FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoItems = await _toDoItemService.GetItemsInListAsync(listId, paginationRequest, cancellationToken);
             return Ok(toDoItems);
         }
     }

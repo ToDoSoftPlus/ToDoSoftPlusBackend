@@ -10,5 +10,6 @@ namespace Application.Interfaces.Services.EF
         Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default);
         Task<ToDoItemDto> GetByIdAsync(int id, CancellationToken token = default);
         Task<PagedResult<ToDoItemDto>> GetAllAsync(PaginationRequest paginationRequest, CancellationToken token = default);
+        Task<PagedResult<ToDoItemDto>> GetItemsInListAsync(int listId, PaginationRequest paginationRequest, CancellationToken token = default);
     }
 }

@@ -50,6 +50,14 @@ namespace Infrastructure.Repositories
             };
         }
 
+        public async Task<ICollection<ToDoSubItemEntity>> GetAllSubItemsInItemAsync(int userId, int itemId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ToDoSubItems
+                .AsNoTracking()
+                .Where(x => x.ToDoItemId == itemId && x.ToDoItem.ToDoList.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<ToDoSubItemEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default)
         {
             return await _context.ToDoSubItems
