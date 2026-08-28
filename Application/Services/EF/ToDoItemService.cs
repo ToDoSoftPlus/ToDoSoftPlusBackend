@@ -24,11 +24,14 @@ namespace Application.Services.EF
 
         public async Task<ToDoItemDto> AddAsync(CreateToDoItemDto createToDoItemDto, CancellationToken token = default)
         {
-            var list = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, createToDoItemDto.ToDoListId, token);
-
-            if (list is null)
+            if (createToDoItemDto.ToDoListId is not null)
             {
-                throw new NotFoundException($"ToDoList with Id '{createToDoItemDto.ToDoListId}' not found.");
+                var list = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, createToDoItemDto.ToDoListId.Value, token);
+
+                if (list is null)
+                {
+                    throw new NotFoundException($"ToDoList with Id '{createToDoItemDto.ToDoListId}' not found.");
+                }
             }
 
             var entity = _mapper.Map<ToDoItemEntity>(createToDoItemDto);

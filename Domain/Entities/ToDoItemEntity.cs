@@ -12,8 +12,8 @@
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? CompletedAt { get; set; }
 
-        public int ToDoListId { get; set; }
-        public ToDoListEntity ToDoList { get; set; } = null!;
+        public int? ToDoListId { get; set; }
+        public ToDoListEntity? ToDoList { get; set; } = null;
 
         public ICollection<ToDoSubItemEntity> SubToDoItems { get; set; } = new List<ToDoSubItemEntity>();
     }
