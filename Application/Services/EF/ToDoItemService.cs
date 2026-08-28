@@ -24,14 +24,18 @@ namespace Application.Services.EF
 
         public async Task<ToDoItemDto> AddAsync(CreateToDoItemDto createToDoItemDto, CancellationToken token = default)
         {
-            var list = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, createToDoItemDto.ToDoListId, token);
-
-            if (list is null)
+            if (createToDoItemDto.ToDoListId is not null)
             {
-                throw new NotFoundException($"ToDoList with Id '{createToDoItemDto.ToDoListId}' not found.");
+                var list = await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, createToDoItemDto.ToDoListId.Value, token);
+
+                if (list is null)
+                {
+                    throw new NotFoundException($"ToDoList with Id '{createToDoItemDto.ToDoListId}' not found.");
+                }
             }
 
             var entity = _mapper.Map<ToDoItemEntity>(createToDoItemDto);
+            entity.UserId = _currentUserId;
             _unitOfWork.ToDoItemRepository.Add(entity);
             await _unitOfWork.SaveChangesAsync(token);
             return _mapper.Map<ToDoItemDto>(entity);
@@ -79,6 +83,21 @@ namespace Application.Services.EF
             return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
         }
 
+        public Task<int> GetMyDayCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetMyDayCountItemsAsync(_currentUserId, token);
+        }
+
+        public Task<int> GetTaskCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetTaskCountItemsAsync(_currentUserId, token);
+        }
+
+        public Task<int> GetImportantCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetImportantCountItemsAsync(_currentUserId, token);
+        }
+
         public async Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)
         {
             var entity = await _unitOfWork.ToDoItemRepository.GetByIdAsync(_currentUserId, updateToDoItemDto.Id, token);
@@ -94,6 +113,24 @@ namespace Application.Services.EF
             _unitOfWork.ToDoItemRepository.Update(entity);
             await _unitOfWork.SaveChangesAsync(token);
             return _mapper.Map<ToDoItemDto>(entity);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetMyDayItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetMyDayItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetImportantItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetImportantItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetTaskItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetTaskItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
         }
     }
 }

@@ -16,9 +16,6 @@ namespace Application.FluentValidators.ToDoItem
 
             RuleFor(x => x.CompletedAt)
                 .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("CompletedAt cannot be in the future.");
-
-            RuleFor(x => x.ToDoListId)
-                .GreaterThan(0).WithMessage("ToDoListId is required.");
         }
     }
 }

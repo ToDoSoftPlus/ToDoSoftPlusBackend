@@ -1,5 +1,4 @@
-﻿using Application.DTOs.ToDoItem;
-using Application.DTOs.ToDoList;
+﻿using Application.DTOs.ToDoList;
 using Application.Exceptions;
 using Application.Interfaces.Services.EF;
 using Application.Interfaces.Services.Identity;

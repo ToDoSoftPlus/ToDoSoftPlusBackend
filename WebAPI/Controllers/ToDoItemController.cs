@@ -75,5 +75,59 @@ namespace WebAPI.Controllers
             var toDoItems = await _toDoItemService.GetItemsInListAsync(listId, paginationRequest, cancellationToken);
             return Ok(toDoItems);
         }
+
+        [HttpGet("my-day/count")]
+        [Authorize]
+        public async Task<IActionResult> GetMyDayCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetMyDayCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("important/count")]
+        [Authorize]
+        public async Task<IActionResult> GetImportantCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetImportantCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("task/count")]
+        [Authorize]
+        public async Task<IActionResult> GetTaskCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetTaskCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("my-day")]
+        [Authorize]
+        public async Task<IActionResult> GetMyDayItems([FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoItems = await _toDoItemService.GetMyDayItemsAsync(paginationRequest, cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("important")]
+        [Authorize]
+        public async Task<IActionResult> GetImportantItems([FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoItems = await _toDoItemService.GetImportantItemsAsync(paginationRequest, cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("task")]
+        [Authorize]
+        public async Task<IActionResult> GetTaskItems([FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoItems = await _toDoItemService.GetTaskItemsAsync(paginationRequest, cancellationToken);
+            return Ok(toDoItems);
+        }
     }
 }

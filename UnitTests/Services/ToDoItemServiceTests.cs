@@ -56,7 +56,7 @@ namespace UnitTests.Services
             var createDto = new CreateToDoItemDto { ToDoListId = 999, Title = "Test Item" };
 
             _unitOfWorkMock
-                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, createDto.ToDoListId, It.IsAny<CancellationToken>()))
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, createDto.ToDoListId.Value, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ToDoListEntity?)null);
 
             Func<Task> act = async () => await _service.AddAsync(createDto);
@@ -76,7 +76,7 @@ namespace UnitTests.Services
             var excpectedDto = new ToDoItemDto { Id = toDoItemEntity.Id, Title = toDoItemEntity.Title, Description = toDoItemEntity.Description };
 
             _unitOfWorkMock
-                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, createDto.ToDoListId, It.IsAny<CancellationToken>()))
+                .Setup(x => x.ToDoListRepository.GetByIdAsync(CurrentUserId, createDto.ToDoListId.Value, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(toDoListEntity);
 
             _mapperMock

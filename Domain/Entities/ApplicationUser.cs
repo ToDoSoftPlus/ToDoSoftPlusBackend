@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<ToDoListEntity> ToDoLists { get; set; } = new List<ToDoListEntity>();
-        public ICollection<MyDayListEntity> MyDayList { get; set; } = new List<MyDayListEntity>();  
+        public ICollection<ToDoListEntity> ToDoLists { get; set; } = new List<ToDoListEntity>(); 
+        public ICollection<ToDoItemEntity> ToDoItems { get; set; } = new List<ToDoItemEntity>();
     }
 }

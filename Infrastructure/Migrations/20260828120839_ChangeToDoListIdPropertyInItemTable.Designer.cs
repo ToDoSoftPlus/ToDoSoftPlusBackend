@@ -4,6 +4,7 @@ using Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260828120839_ChangeToDoListIdPropertyInItemTable")]
+    partial class ChangeToDoListIdPropertyInItemTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,7 +149,7 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsImportant")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsMyDay")
+                    b.Property<bool>("IsMayDay")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
@@ -159,16 +162,11 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IsCompleted");
 
                     b.HasIndex("ToDoListId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("ToDoItems");
                 });
@@ -337,17 +335,9 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ToDoListEntity", "ToDoList")
                         .WithMany("ToDoItemsList")
                         .HasForeignKey("ToDoListId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Domain.Entities.ApplicationUser", "User")
-                        .WithMany("ToDoItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ToDoList");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.ToDoListEntity", b =>
@@ -425,8 +415,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("ToDoItems");
-
                     b.Navigation("ToDoLists");
                 });
 
