@@ -75,5 +75,29 @@ namespace WebAPI.Controllers
             var toDoItems = await _toDoItemService.GetItemsInListAsync(listId, paginationRequest, cancellationToken);
             return Ok(toDoItems);
         }
+
+        [HttpGet("my-day/count")]
+        [Authorize]
+        public async Task<IActionResult> GetMyDayCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetMyDayCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("important/count")]
+        [Authorize]
+        public async Task<IActionResult> GetImportantCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetImportantCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
+
+        [HttpGet("task/count")]
+        [Authorize]
+        public async Task<IActionResult> GetTaskCountItems(CancellationToken cancellationToken)
+        {
+            var toDoItems = await _toDoItemService.GetTaskCountItemsAsync(cancellationToken);
+            return Ok(toDoItems);
+        }
     }
 }

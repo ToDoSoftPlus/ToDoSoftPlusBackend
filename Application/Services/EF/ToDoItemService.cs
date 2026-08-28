@@ -35,6 +35,7 @@ namespace Application.Services.EF
             }
 
             var entity = _mapper.Map<ToDoItemEntity>(createToDoItemDto);
+            entity.UserId = _currentUserId;
             _unitOfWork.ToDoItemRepository.Add(entity);
             await _unitOfWork.SaveChangesAsync(token);
             return _mapper.Map<ToDoItemDto>(entity);
@@ -80,6 +81,21 @@ namespace Application.Services.EF
 
             var toDoItems = await _unitOfWork.ToDoItemRepository.GetItemsInListAsync(_currentUserId, listId, paginationRequest.Page, paginationRequest.PageSize);
             return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public Task<int> GetMyDayCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetMyDayCountItemsAsync(_currentUserId, token);
+        }
+
+        public Task<int> GetTaskCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetTaskCountItemsAsync(_currentUserId, token);
+        }
+
+        public Task<int> GetImportantCountItemsAsync(CancellationToken token = default)
+        {
+            return _unitOfWork.ToDoItemRepository.GetImportantCountItemsAsync(_currentUserId, token);
         }
 
         public async Task<ToDoItemDto> UpdateAsync(UpdateToDoItemDto updateToDoItemDto, CancellationToken token = default)

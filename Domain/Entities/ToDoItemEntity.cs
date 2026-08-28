@@ -13,7 +13,9 @@
         public DateTime? CompletedAt { get; set; }
 
         public int? ToDoListId { get; set; }
-        public ToDoListEntity? ToDoList { get; set; } = null;
+        public ToDoListEntity? ToDoList { get; set; }
+        public int UserId { get; set; }
+        public ApplicationUser User { get; set; } = null!;
 
         public ICollection<ToDoSubItemEntity> SubToDoItems { get; set; } = new List<ToDoSubItemEntity>();
     }

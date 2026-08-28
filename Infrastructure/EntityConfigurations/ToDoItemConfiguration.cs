@@ -14,9 +14,14 @@ namespace Infrastructure.EntityConfigurations
                 .HasOne(x => x.ToDoList)
                 .WithMany(x => x.ToDoItemsList)
                 .HasForeignKey(x => x.ToDoListId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasIndex(x => x.ToDoListId);
+            builder
+                .HasOne(x => x.User)
+                .WithMany(x => x.ToDoItems)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasIndex(x => x.IsCompleted);
         }
     }
