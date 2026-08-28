@@ -114,5 +114,23 @@ namespace Application.Services.EF
             await _unitOfWork.SaveChangesAsync(token);
             return _mapper.Map<ToDoItemDto>(entity);
         }
+
+        public async Task<PagedResult<ToDoItemDto>> GetMyDayItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetMyDayItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetImportantItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetImportantItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
+
+        public async Task<PagedResult<ToDoItemDto>> GetTaskItemsAsync(PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var toDoItems = await _unitOfWork.ToDoItemRepository.GetTaskItemsAsync(_currentUserId, paginationRequest.Page, paginationRequest.PageSize);
+            return _mapper.Map<PagedResult<ToDoItemDto>>(toDoItems);
+        }
     }
 }

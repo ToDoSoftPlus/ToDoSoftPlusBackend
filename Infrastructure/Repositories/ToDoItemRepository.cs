@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories;
 using Application.Models.Pagination;
+using Azure;
 using Domain.Entities;
 using Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
@@ -98,7 +99,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.ToDoItems
                 .AsNoTracking()
-                .Where(x => x.UserId == userId && x.IsMayDay == true)
+                .Where(x => x.UserId == userId && x.IsMyDay == true)
                 .CountAsync(cancellationToken);
         }
 
@@ -116,6 +117,90 @@ namespace Infrastructure.Repositories
                 .AsNoTracking()
                 .Where(x => x.UserId == userId && x.IsImportant == true)
                 .CountAsync(cancellationToken);
+        }
+
+        public async Task<PagedResult<ToDoItemEntity>> GetMyDayItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ToDoItems
+                .AsNoTracking()
+                .Where(x => x.UserId == userId && x.IsMyDay);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PagedResult<ToDoItemEntity>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1
+            };
+        }
+
+        public async Task<PagedResult<ToDoItemEntity>> GetImportantItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ToDoItems
+                .AsNoTracking()
+                .Where(x => x.UserId == userId && x.IsImportant);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PagedResult<ToDoItemEntity>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1
+            };
+        }
+
+        public async Task<PagedResult<ToDoItemEntity>> GetTaskItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ToDoItems
+                .AsNoTracking()
+                .Where(x => x.UserId == userId && x.ToDoList == null);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            return new PagedResult<ToDoItemEntity>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                HasNextPage = page < totalPages,
+                HasPreviousPage = page > 1
+            };
         }
     }
 }

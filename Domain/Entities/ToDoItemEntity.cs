@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public bool IsMayDay { get; set; }
+        public bool IsMyDay { get; set; }
         public bool IsImportant { get; set; }
         public bool IsCompleted { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

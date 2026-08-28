@@ -11,6 +11,9 @@ namespace Application.Interfaces.Repositories
         Task<int> GetMyDayCountItemsAsync(int userId, CancellationToken cancellationToken = default);
         Task<int> GetImportantCountItemsAsync(int userId, CancellationToken cancellationToken = default);
         Task<int> GetTaskCountItemsAsync(int userId, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoItemEntity>> GetMyDayItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoItemEntity>> GetImportantItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoItemEntity>> GetTaskItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
         void Add(ToDoItemEntity item);
         void Update(ToDoItemEntity item);
         void Delete(ToDoItemEntity item);
