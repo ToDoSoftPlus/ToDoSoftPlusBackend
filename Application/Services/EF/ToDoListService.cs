@@ -75,6 +75,14 @@ namespace Application.Services.EF
             return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);
         }
 
+        public async Task<PagedResult<ToDoSidebarListDto>> SearchSidebarListsAsync(string title, PaginationRequest paginationRequest, CancellationToken token = default)
+        {
+            var lists = await _unitOfWork.ToDoListRepository.SearchListsAsync(
+                _currentUserId, title, paginationRequest.Page, paginationRequest.PageSize, token);
+
+            return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);
+        }
+
         public async Task<ToDoListDto> UpdateAsync(UpdateToDoListDto updateToDoListDto, CancellationToken token = default)
         {
             if (await _unitOfWork.ToDoListRepository.GetByIdAsync(_currentUserId, updateToDoListDto.Id, token) is not ToDoListEntity entity)

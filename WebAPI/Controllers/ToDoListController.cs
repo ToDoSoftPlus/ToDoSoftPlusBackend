@@ -75,5 +75,15 @@ namespace WebAPI.Controllers
             var toDoSidebarLists = await _toDoListService.GetSidebarListsAsync(paginationRequest, cancellationToken);
             return Ok(toDoSidebarLists);
         }
+
+        [HttpGet("sidebar/search")]
+        [Authorize]
+        public async Task<IActionResult> SearchSidebarLists([FromQuery] string title, [FromQuery] PaginationRequest paginationRequest, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoSidebarLists = await _toDoListService.SearchSidebarListsAsync(title, paginationRequest, cancellationToken);
+            return Ok(toDoSidebarLists);
+        }
     }
 }
