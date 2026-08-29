@@ -25,11 +25,22 @@ namespace Infrastructure.Repositories
             _context.Remove(item);
         }
 
-        public async Task<PagedResult<ToDoListEntity>> GetAllAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PagedResult<ToDoListEntity>> GetAllAsync(
+            int userId, int page, int pageSize, DateTime? sortStartDate, DateTime? sortEndDate, CancellationToken cancellationToken = default)
         {
             var query = _context.ToDoLists.AsNoTracking().Where(x => x.UserId == userId);
 
             var totalCount = await query.CountAsync(cancellationToken);
+
+            if (sortStartDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date >= sortStartDate.Value);
+            }
+
+            if (sortEndDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date <= sortEndDate.Value);
+            }
 
             var items = await query
                 .OrderByDescending(x => x.CreatedAt)
@@ -51,12 +62,23 @@ namespace Infrastructure.Repositories
             };
         }
 
-        public async Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(
+            int userId, int page, int pageSize, DateTime? sortStartDate, DateTime? sortEndDate, CancellationToken cancellationToken = default)
         {
             var query = _context.ToDoLists
                 .AsNoTracking()
                 .Include(x => x.ToDoItemsList)
                 .Where(x => x.UserId == userId);
+
+            if (sortStartDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date >= sortStartDate.Value);
+            }
+
+            if (sortEndDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date <= sortEndDate.Value);
+            }
 
             var totalCount = await query.CountAsync(cancellationToken);
 
@@ -101,12 +123,23 @@ namespace Infrastructure.Repositories
                 .AnyAsync(x => x.Title == title && x.UserId == userId && x.Id != currentListId, cancellationToken);
         }
 
-        public async Task<PagedResult<ToDoListEntity>> SearchListsAsync(int userId, string title, int page, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PagedResult<ToDoListEntity>> SearchListsAsync(
+            int userId, string title, int page, int pageSize, DateTime? sortStartDate, DateTime? sortEndDate, CancellationToken cancellationToken = default)
         {
             var query = _context.ToDoLists
                 .AsNoTracking()
                 .Include(x => x.ToDoItemsList)
                 .Where(x => x.UserId == userId && x.Title.Contains(title));
+
+            if (sortStartDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date >= sortStartDate.Value);
+            }
+
+            if (sortEndDate != null)
+            {
+                query = query.Where(x => x.CreatedAt.Date <= sortEndDate.Value);
+            }
 
             var totalCount = await query.CountAsync(cancellationToken);
 
