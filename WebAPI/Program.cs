@@ -1,21 +1,96 @@
+using Application;
+using Domain.Entities;
+using Infrastructure;
+using Infrastructure.Seeders;
+using Microsoft.AspNetCore.Identity;
+using WebAPI.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region Local appsettings
+//Add reading a local appsettings file for development environment
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.Local.json",
+        optional: true,
+        reloadOnChange: true);
+#endregion
+
+#region Dependency Injection Projects
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
+#endregion
+
+#region NSwag
+builder.Services.AddOpenApiDocument(document =>
+{
+    document.Title = "ToDo API";
+    document.Version = "v1";
+
+    document.AddSecurity("JWT", Enumerable.Empty<string>(), new NSwag.OpenApiSecurityScheme
+    {
+        Type = NSwag.OpenApiSecuritySchemeType.ApiKey,
+        Name = "Authorization",
+        In = NSwag.OpenApiSecurityApiKeyLocation.Header,
+        Description = "Введіть токен у форматі: Bearer {ваш_токен}"
+    });
+
+    document.OperationProcessors.Add(
+        new NSwag.Generation.Processors.Security.AspNetCoreOperationSecurityScopeProcessor("JWT"));
+});
+#endregion
+
+#region CORS
+var frontendOrigins = builder.Configuration.GetSection("Cors").GetSection("AllowedOrigins").Get<string[]>();
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+            .WithOrigins(frontendOrigins!)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+#endregion
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors("FrontendPolicy");
+
+#region Seeders
+//Seed roles in the database
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+}
+#endregion
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseOpenApi();
+    app.UseSwaggerUi(config =>
+    {
+        config.Path = "/swagger";
+        config.DocumentPath = "/swagger/v1/swagger.json";
+    });
 }
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

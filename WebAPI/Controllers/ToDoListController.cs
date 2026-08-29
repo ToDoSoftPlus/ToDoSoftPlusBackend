@@ -1,0 +1,100 @@
+﻿using Application.DTOs.ToDoList;
+using Application.Interfaces.Services.EF;
+using Application.Interfaces.Services.Validation;
+using Application.Models.Pagination;
+using Application.Models.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers
+{
+    [ApiController]
+    [Route("api/v1/todo-list")]
+    public class ToDoListController : ControllerBase
+    {
+        private readonly IToDoListService _toDoListService;
+        private readonly IValidationService _validationService;
+
+        public ToDoListController(IToDoListService toDoListService, IValidationService validationService)
+        {
+            _toDoListService = toDoListService;
+            _validationService = validationService;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Post([FromBody] CreateToDoListDto dto, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(dto, cancellationToken);
+
+            var toDoList = await _toDoListService.AddAsync(dto, cancellationToken);
+            return CreatedAtAction(nameof(Get), new { id = toDoList.Id }, dto);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Put([FromBody] UpdateToDoListDto dto, CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(dto, cancellationToken);
+
+            var toDoList = await _toDoListService.UpdateAsync(dto, cancellationToken);
+            return Ok(toDoList);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        {
+            await _toDoListService.DeleteAsync(id, cancellationToken);
+            return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        {
+            var toDoList = await _toDoListService.GetByIdAsync(id, cancellationToken);
+            return Ok(toDoList);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Get(
+            [FromQuery] PaginationRequest paginationRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
+            CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoLists = await _toDoListService.GetAllAsync(paginationRequest, filterListsRequest, cancellationToken);
+            return Ok(toDoLists);
+        }
+
+        [HttpGet("sidebar")]
+        [Authorize]
+        public async Task<IActionResult> GetSidebarLists(
+            [FromQuery] PaginationRequest paginationRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
+            CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoSidebarLists = await _toDoListService.GetSidebarListsAsync(paginationRequest, filterListsRequest, cancellationToken);
+            return Ok(toDoSidebarLists);
+        }
+
+        [HttpGet("sidebar/search")]
+        [Authorize]
+        public async Task<IActionResult> SearchSidebarLists(
+            [FromQuery] string title,
+            [FromQuery] PaginationRequest paginationRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
+            CancellationToken cancellationToken)
+        {
+            await _validationService.ValidateAsync(paginationRequest, cancellationToken);
+
+            var toDoSidebarLists = await _toDoListService.SearchSidebarListsAsync(title, paginationRequest, filterListsRequest, cancellationToken);
+            return Ok(toDoSidebarLists);
+        }
+    }
+}

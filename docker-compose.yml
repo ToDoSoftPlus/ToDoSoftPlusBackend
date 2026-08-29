@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server
+    container_name: ToDoContainer
+    environment:
+      SA_PASSWORD: Password123
+      ACCEPT_EULA: Y
+    ports:
+      - "1433:1433"

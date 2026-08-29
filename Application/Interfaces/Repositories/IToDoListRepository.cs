@@ -1,0 +1,21 @@
+﻿using Application.Models.Pagination;
+using Domain.Entities;
+
+namespace Application.Interfaces.Repositories
+{
+    public interface IToDoListRepository
+    {
+        Task<ToDoListEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> GetAllAsync(
+            int userId, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(
+            int userId, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> SearchListsAsync(
+            int userId, string title, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
+        void Add(ToDoListEntity item);
+        void Update(ToDoListEntity item);
+        void Delete(ToDoListEntity item);
+        Task<bool> IsExistsByTitleAndUserIdAsync(string title, int userId, CancellationToken cancellationToken = default);
+        Task<bool> IsExistsByTitleAndUserIdInAdditionCurrentListIdAsync(string title, int userId, int currentListId, CancellationToken cancellationToken = default);
+    }
+}
