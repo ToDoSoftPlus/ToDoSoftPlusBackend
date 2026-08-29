@@ -6,9 +6,12 @@ namespace Application.Interfaces.Repositories
     public interface IToDoListRepository
     {
         Task<ToDoListEntity?> GetByIdAsync(int userId, int id, CancellationToken cancellationToken = default);
-        Task<PagedResult<ToDoListEntity>> GetAllAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
-        Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(int userId, int page, int pageSize, CancellationToken cancellationToken = default);
-        Task<PagedResult<ToDoListEntity>> SearchListsAsync(int userId, string title, int page, int pageSize, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> GetAllAsync(
+            int userId, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> GetAllWithItemsAsync(
+            int userId, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
+        Task<PagedResult<ToDoListEntity>> SearchListsAsync(
+            int userId, string title, int page, int pageSize, DateTime? filterStartDate, DateTime? filterEndDate, CancellationToken cancellationToken = default);
         void Add(ToDoListEntity item);
         void Update(ToDoListEntity item);
         void Delete(ToDoListEntity item);
