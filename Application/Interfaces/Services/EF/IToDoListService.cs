@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.ToDoList;
 using Application.Models.Pagination;
-using Application.Models.Sort;
+using Application.Models.Filters;
 
 namespace Application.Interfaces.Services.EF
 {
@@ -11,10 +11,10 @@ namespace Application.Interfaces.Services.EF
         Task<ToDoListDto> UpdateAsync(UpdateToDoListDto updateToDoListDto, CancellationToken token = default);
         Task<ToDoListDto> GetByIdAsync(int id, CancellationToken token = default);
         Task<PagedResult<ToDoListDto>> GetAllAsync(
-            PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default);
+            PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default);
         Task<PagedResult<ToDoSidebarListDto>> GetSidebarListsAsync(
-            PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default);
+            PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default);
         Task<PagedResult<ToDoSidebarListDto>> SearchSidebarListsAsync(
-            string title, PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default);
+            string title, PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Application.Models.Sort
+﻿namespace Application.Models.Filters
 {
-    public class SortingListsRequest
+    public class FiltetingListsRequest
     {
         public DateTime? startDate { get; set; }
         public DateTime? endDate { get; set; }

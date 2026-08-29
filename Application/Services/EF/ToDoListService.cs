@@ -4,7 +4,7 @@ using Application.Interfaces.Services.EF;
 using Application.Interfaces.Services.Identity;
 using Application.Interfaces.UnitOfWork;
 using Application.Models.Pagination;
-using Application.Models.Sort;
+using Application.Models.Filters;
 using AutoMapper;
 using Domain.Entities;
 
@@ -53,14 +53,14 @@ namespace Application.Services.EF
         }
 
         public async Task<PagedResult<ToDoListDto>> GetAllAsync(
-            PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default)
+            PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default)
         {
             var toDoLists = await _unitOfWork.ToDoListRepository.GetAllAsync(
                 _currentUserId,
                 paginationRequest.Page,
                 paginationRequest.PageSize,
-                sortingRequest.startDate,
-                sortingRequest.endDate,
+                filterListsRequest.startDate,
+                filterListsRequest.endDate,
                 token);
 
             return _mapper.Map<PagedResult<ToDoListDto>>(toDoLists);
@@ -79,28 +79,28 @@ namespace Application.Services.EF
         }
 
         public async Task<PagedResult<ToDoSidebarListDto>> GetSidebarListsAsync(
-            PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default)
+            PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default)
         {
             var lists = await _unitOfWork.ToDoListRepository.GetAllWithItemsAsync(
                 _currentUserId,
                 paginationRequest.Page,
                 paginationRequest.PageSize,
-                sortingRequest.startDate,
-                sortingRequest.endDate,
+                filterListsRequest.startDate,
+                filterListsRequest.endDate,
                 token);
             return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);
         }
 
         public async Task<PagedResult<ToDoSidebarListDto>> SearchSidebarListsAsync(
-            string title, PaginationRequest paginationRequest, SortingListsRequest sortingRequest, CancellationToken token = default)
+            string title, PaginationRequest paginationRequest, FiltetingListsRequest filterListsRequest, CancellationToken token = default)
         {
             var lists = await _unitOfWork.ToDoListRepository.SearchListsAsync(
                 _currentUserId,
                 title,
                 paginationRequest.Page,
                 paginationRequest.PageSize,
-                sortingRequest.startDate,
-                sortingRequest.endDate,
+                filterListsRequest.startDate,
+                filterListsRequest.endDate,
                 token);
 
             return _mapper.Map<PagedResult<ToDoSidebarListDto>>(lists);

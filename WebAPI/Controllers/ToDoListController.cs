@@ -2,7 +2,7 @@
 using Application.Interfaces.Services.EF;
 using Application.Interfaces.Services.Validation;
 using Application.Models.Pagination;
-using Application.Models.Sort;
+using Application.Models.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,12 +61,12 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Get(
             [FromQuery] PaginationRequest paginationRequest,
-            [FromQuery] SortingListsRequest sortingRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
             CancellationToken cancellationToken)
         {
             await _validationService.ValidateAsync(paginationRequest, cancellationToken);
 
-            var toDoLists = await _toDoListService.GetAllAsync(paginationRequest, sortingRequest, cancellationToken);
+            var toDoLists = await _toDoListService.GetAllAsync(paginationRequest, filterListsRequest, cancellationToken);
             return Ok(toDoLists);
         }
 
@@ -74,12 +74,12 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> GetSidebarLists(
             [FromQuery] PaginationRequest paginationRequest,
-            [FromQuery] SortingListsRequest sortingRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
             CancellationToken cancellationToken)
         {
             await _validationService.ValidateAsync(paginationRequest, cancellationToken);
 
-            var toDoSidebarLists = await _toDoListService.GetSidebarListsAsync(paginationRequest, sortingRequest, cancellationToken);
+            var toDoSidebarLists = await _toDoListService.GetSidebarListsAsync(paginationRequest, filterListsRequest, cancellationToken);
             return Ok(toDoSidebarLists);
         }
 
@@ -88,12 +88,12 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> SearchSidebarLists(
             [FromQuery] string title,
             [FromQuery] PaginationRequest paginationRequest,
-            [FromQuery] SortingListsRequest sortingRequest,
+            [FromQuery] FiltetingListsRequest filterListsRequest,
             CancellationToken cancellationToken)
         {
             await _validationService.ValidateAsync(paginationRequest, cancellationToken);
 
-            var toDoSidebarLists = await _toDoListService.SearchSidebarListsAsync(title, paginationRequest, sortingRequest, cancellationToken);
+            var toDoSidebarLists = await _toDoListService.SearchSidebarListsAsync(title, paginationRequest, filterListsRequest, cancellationToken);
             return Ok(toDoSidebarLists);
         }
     }
